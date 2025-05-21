@@ -1,8 +1,7 @@
 <?php
 
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../classes/Cards.php';
+
 header('Content-Type: application/json');
 
 $cards = Cards::getCards();

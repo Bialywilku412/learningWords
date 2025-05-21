@@ -20,12 +20,35 @@ class Cards implements JsonSerializable {
         }
     }
 
+    public static function getCard(int $id): ?Cards {
+        try {
+            $conn = Database::getConnection();
+
+            $statement = $conn->prepare("
+                SELECT * FROM cards
+                WHERE id = :id
+            ");
+            $statement->bindValue(":id", $id);
+            $statement->execute();
+
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return new Cards($row);
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            error_log("Error fetching card: " . $e->getMessage());
+            return null;
+        }
+    }
+
     public static function addCard(string $name): bool {
         try {
             $conn = Database::getConnection();
 
             $statement = $conn->prepare("
-                INSERT INTO card (name)
+                INSERT INTO cards (name)
                 VALUES (:name)
             ");
             $statement->bindValue(":name", $name);
